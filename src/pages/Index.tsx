@@ -31,6 +31,7 @@ const Index = () => {
   const [revealed, setRevealed] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [lightbox, setLightbox] = useState<string | null>(null);
+  const [giftOpened, setGiftOpened] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -74,7 +75,10 @@ const Index = () => {
           <Reveal delay={900}>
             <Button
               size="lg"
-              onClick={() => document.getElementById("message")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => {
+                setGiftOpened(true);
+                document.getElementById("message")?.scrollIntoView({ behavior: "smooth" });
+              }}
               className="relative bg-gradient-rose text-primary-foreground border-0 px-10 py-7 text-base rounded-full glow-pulse hover:scale-105 transition-transform duration-500"
             >
               <Sparkles className="mr-2 h-4 w-4" />
@@ -83,7 +87,9 @@ const Index = () => {
           </Reveal>
         </div>
 
-        <ChevronDown className="absolute bottom-8 left-1/2 -translate-x-1/2 w-8 h-8 text-gold animate-bounce z-10" />
+        {giftOpened && (
+          <ChevronDown className="absolute bottom-8 left-1/2 -translate-x-1/2 w-8 h-8 text-gold animate-bounce z-10" />
+        )}
       </section>
 
       {/* MESSAGE */}
