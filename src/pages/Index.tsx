@@ -5,9 +5,10 @@ import FloatingHearts from "@/components/birthday/FloatingHearts";
 import Reveal from "@/components/birthday/Reveal";
 import heroBg from "@/assets/hero-bg.jpg";
 import rose from "@/assets/rose.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
-import gallery3 from "@/assets/gallery-3.jpg";
+import mom1 from "@/assets/mom-1.jpg";
+import mom2 from "@/assets/mom-2.jpg";
+import mom3 from "@/assets/mom-3.jpg";
+import mom4 from "@/assets/mom-4.jpg";
 
 const reasons = [
   { icon: Heart, title: "Endless Love", text: "Your love has been the warmest place I've ever known — soft, safe, and forever." },
@@ -29,6 +30,7 @@ const memories = [
 const Index = () => {
   const [revealed, setRevealed] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const [lightbox, setLightbox] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrollY(window.scrollY);
@@ -151,23 +153,34 @@ const Index = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            {[gallery1, rose, gallery2, gallery3].map((img, i) => (
+            {[
+              { img: mom1, caption: "Always safe in your arms" },
+              { img: mom2, caption: "Your smile, my home" },
+              { img: mom3, caption: "Forever your little one" },
+              { img: mom4, caption: "A kiss that says it all" },
+            ].map(({ img, caption }, i) => (
               <Reveal key={i} delay={i * 100} className={i % 3 === 0 ? "md:row-span-2 md:col-span-2" : ""}>
-                <div className="group relative overflow-hidden rounded-2xl shadow-elegant aspect-[3/4] md:aspect-auto md:h-full cursor-pointer">
+                <button
+                  onClick={() => setLightbox(img)}
+                  className="group relative overflow-hidden rounded-2xl shadow-elegant aspect-[3/4] md:aspect-auto md:h-full w-full cursor-pointer block hover:shadow-rose transition-shadow duration-500"
+                >
                   <img
                     src={img}
-                    alt={`Memory ${i + 1}`}
+                    alt={caption}
                     loading="lazy"
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-rose/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-4 left-4 right-4 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                    <Heart className="w-6 h-6 text-ivory fill-ivory" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-rose/80 via-rose/10 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 md:p-5 text-left translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+                    <Heart className="w-5 h-5 text-ivory fill-ivory mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <p className="font-script text-xl md:text-2xl text-ivory drop-shadow-lg">{caption}</p>
                   </div>
-                </div>
+                </button>
               </Reveal>
             ))}
           </div>
+
+          <p className="text-center text-xs text-muted-foreground mt-6 italic">Tap any photo to view it bigger</p>
         </div>
       </section>
 
@@ -254,6 +267,28 @@ const Index = () => {
               Tap anywhere to close — but please know it's true, every single day.
             </p>
           </div>
+        </div>
+      )}
+
+      {/* LIGHTBOX */}
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-foreground/90 backdrop-blur-md p-4 animate-bloom"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            onClick={() => setLightbox(null)}
+            className="absolute top-6 right-6 w-12 h-12 rounded-full bg-card/80 backdrop-blur flex items-center justify-center hover:scale-110 transition z-10"
+            aria-label="Close"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <img
+            src={lightbox}
+            alt="Memory enlarged"
+            className="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-rose"
+            onClick={(e) => e.stopPropagation()}
+          />
         </div>
       )}
     </div>
